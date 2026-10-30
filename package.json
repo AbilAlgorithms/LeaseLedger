@@ -1,0 +1,25 @@
+{
+  "name": "leaseledger-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "install:all": "npm --prefix server install && npm --prefix client install",
+    "dev": "concurrently -n \"server,client\" -c \"bgBlue.bold,bgGreen.bold\" \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix server start",
+    "seed": "npm --prefix server run seed",
+    "test": "npm run test:server && npm run test:client",
+    "test:server": "npm --prefix server test",
+    "test:client": "npm --prefix client test",
+    "e2e": "npx playwright test --config e2e/playwright.config.js",
+    "e2e:screenshots": "npx playwright test e2e/capture/screenshot.spec.js --config e2e/playwright.config.js",
+    "e2e:demo": "npx playwright test e2e/capture/record-demo.spec.js --config e2e/playwright.config.js",
+    "lint": "npm --prefix server run lint && npm --prefix client run lint"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

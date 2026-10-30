@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:7
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Root Dependencies
+        run: npm install
+
+      - name: Install Server Dependencies
+        working-directory: ./server
+        run: npm install
+
+      - name: Install Client Dependencies
+        working-directory: ./client
+        run: npm install
+
+      - name: Run Server Tests
+        working-directory: ./server
+        env:
+          NODE_ENV: test
+          MONGODB_URI: mongodb://localhost:27017/leaseledger_test
+          JWT_ACCESS_SECRET: test_jwt_access_secret_1234567890
+          JWT_REFRESH_SECRET: test_jwt_refresh_secret_1234567890
+        run: npm test
+
+      - name: Run Client Tests
+        working-directory: ./client
+        run: npm test
+
+      - name: Build Client
+        working-directory: ./client
+        run: npm run build
