@@ -21,6 +21,10 @@ import NotificationsPage from './pages/shared/NotificationsPage';
 import ComparisonPage from './pages/shared/ComparisonPage';
 import ReportPage from './pages/shared/ReportPage';
 import SharedReportPage from './pages/public/SharedReportPage';
+import AdminDashboardPage from './pages/admin/AdminDashboardPage';
+import AdminUsersPage from './pages/admin/AdminUsersPage';
+import AdminConfigPage from './pages/admin/AdminConfigPage';
+import AdminAuditPage from './pages/admin/AdminAuditPage';
 
 export default function AppRoutes() {
   return (
@@ -133,6 +137,40 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute roles={['LANDLORD']}>
             <CreateTenancyPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin Specific Pages */}
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute roles={['ADMIN']}>
+            <AdminDashboardPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/users"
+        element={
+          <ProtectedRoute roles={['ADMIN']}>
+            <AdminUsersPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/config"
+        element={
+          <ProtectedRoute roles={['ADMIN']}>
+            <AdminConfigPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/audit"
+        element={
+          <ProtectedRoute roles={['ADMIN']}>
+            <AdminAuditPage />
           </ProtectedRoute>
         }
       />

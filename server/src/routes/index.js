@@ -11,6 +11,7 @@ import amendmentRoutes from './amendment.routes.js';
 import issueRoutes from './issue.routes.js';
 import notificationRoutes from './notification.routes.js';
 import sharedRoutes from './shared.routes.js';
+import adminRoutes from './admin.routes.js';
 
 const router = Router();
 
@@ -26,6 +27,7 @@ router.use('/amendments', amendmentRoutes);
 router.use('/issues', issueRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/shared', sharedRoutes);
+router.use('/admin', adminRoutes);
 
 router.get('/', (req, res) => {
   res.json({
