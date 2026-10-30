@@ -18,7 +18,28 @@ LeaseLedger implements a **3-tier modular architecture**:
 
 ## 2. Backend Modules: What, Why & How They Connect
 
-*(Updated progressively as each module is built in Phases P1 through P9)*
+### 2.1 Domain Models & Database Architecture (`server/src/models`)
+- **What it is:** A comprehensive collection of 17 Mongoose schemas enforcing relational-grade constraints, lifecycle statuses, compound uniqueness, and tamper-resistant immutability.
+- **Why we built it this way:** 
+  1. Rental property handovers require strict multi-level nesting: Property → Rooms → Inventory Items → Inspections → Condition Records & Meter Readings.
+  2. The IEEE 830 SRS requires that once both parties confirm an inspection, it becomes an **immutable digital legal record**. Any tampering through typical REST updates must be blocked at the database driver/model layer.
+- **Key Models Created:**
+  - `User`: Handles RBAC roles (`LANDLORD`, `TENANT`, `ADMIN`), bcrypt-hashed passwords (cost 12), email verification tokens, and session timestamps.
+  - `Property`, `Room`, `InventoryItem`: Strict hierarchical inventory management. Compound index `{ property: 1, name: 1 }` prevents room duplicates; `{ room: 1, archived: 1 }` enables soft-archival without breaking historical inspections.
+  - `Tenancy`: Binds Landlord to one or more primary and co-tenants, validating that `endDate > startDate` and managing lifecycle (`PENDING → ACTIVE → COMPLETED`).
+  - `Invitation`: Cryptographically secure 32-byte single-use tokens stored as SHA-256 digests.
+  - `Inspection`: Dual-state machine (`DRAFT → IN_REVIEW → LOCKED`) with unique `{ tenancy: 1, type: 1 }` compound index. Features Mongoose query middleware guards that intercept `updateOne`, `findOneAndUpdate`, and `deleteOne` to block post-lock mutations with HTTP 409 `INSPECTION_LOCKED`.
+  - `ConditionRecord`: Item-level condition snapshots, 5-point rating scores, qualitative notes, and dispute statuses, protected by parent lock verification.
+  - `Photo`: Polymorphic attachment model (`ConditionRecord` or `IssueReport`) storing SHA-256 checksums on all photos for cryptographic tamper detection.
+  - `MeterReading`: Utility meters (`ELECTRICITY`, `WATER`, `GAS`) with readings, units, and timestamps.
+  - `Amendment`: Append-only post-lock correction logs with bidirectional acknowledgements.
+  - `IssueReport`: Mid-tenancy incident reports tracking repair requests and photo evidence.
+  - `Comparison`: Automated diff engine output matching move-in and move-out condition records, meter deltas, and differential classifications.
+  - `Report`: Archival PDF records with revocable public share tokens.
+  - `Notification` & `AuditLog`: In-app notification queues and append-only tamper-evident audit logs.
+  - `Config`: System-wide settings for condition scales and item categories.
+- **How it connects:** Controllers and service layers never invoke low-level driver mutations directly. Instead, domain rules are enforced at the model boundary, ensuring that even unexpected query paths cannot bypass the legal immutability of signed inspections.
+
 
 ---
 
