@@ -16,6 +16,8 @@ import CreateTenancyPage from './pages/landlord/CreateTenancyPage';
 import TenancyDetailPage from './pages/shared/TenancyDetailPage';
 import InspectionWizardPage from './pages/shared/InspectionWizardPage';
 import InspectionReviewPage from './pages/shared/InspectionReviewPage';
+import IssuesPage from './pages/shared/IssuesPage';
+import NotificationsPage from './pages/shared/NotificationsPage';
 
 export default function AppRoutes() {
   return (
@@ -47,10 +49,26 @@ export default function AppRoutes() {
         }
       />
       <Route
+        path="/notifications"
+        element={
+          <ProtectedRoute>
+            <NotificationsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/tenancies/:id"
         element={
           <ProtectedRoute>
             <TenancyDetailPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/tenancies/:id/issues"
+        element={
+          <ProtectedRoute>
+            <IssuesPage />
           </ProtectedRoute>
         }
       />

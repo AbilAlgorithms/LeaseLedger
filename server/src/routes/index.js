@@ -8,6 +8,8 @@ import tenancyRoutes from './tenancy.routes.js';
 import invitationRoutes from './invitation.routes.js';
 import inspectionRoutes from './inspection.routes.js';
 import amendmentRoutes from './amendment.routes.js';
+import issueRoutes from './issue.routes.js';
+import notificationRoutes from './notification.routes.js';
 
 const router = Router();
 
@@ -20,6 +22,8 @@ router.use('/tenancies', tenancyRoutes);
 router.use('/invitations', invitationRoutes);
 router.use('/inspections', inspectionRoutes);
 router.use('/amendments', amendmentRoutes);
+router.use('/issues', issueRoutes);
+router.use('/notifications', notificationRoutes);
 
 router.get('/', (req, res) => {
   res.json({

@@ -1,15 +1,30 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { notificationApi } from '../../api/notification.api';
 import { useAuth } from '../../hooks/useAuth';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';
-import { Bell, User, LogOut, ShieldCheck, Home, FileText, Settings, Menu, X } from 'lucide-react';
+import { Bell, User, LogOut, Home, FileText, Settings, Menu, X } from 'lucide-react';
 
 export default function Navbar() {
   const { user, isAuthenticated, isLandlord, isTenant, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const { data: notifData } = useQuery({
+    queryKey: ['notifications-badge'],
+    queryFn: async () => {
+      if (!isAuthenticated) return null;
+      const res = await notificationApi.getNotifications({ limit: 1 });
+      return res.data;
+    },
+    enabled: isAuthenticated,
+    refetchInterval: 30000, // Poll every 30s
+  });
+
+  const unreadCount = notifData?.meta?.unreadCount || 0;
 
   const handleLogout = async () => {
     await logout();
@@ -84,13 +99,18 @@ export default function Navbar() {
                 </span>
               </div>
 
-              {/* Notifications Link */}
+              {/* Notifications Link with unread badge */}
               <Link
                 to="/notifications"
                 className="relative p-2 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
                 title="Notifications"
               >
                 <Bell className="w-5 h-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute top-1.5 right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-damage text-white text-[10px] font-mono font-bold flex items-center justify-center ring-2 ring-surface">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
               </Link>
 
               {/* Profile Link */}
@@ -157,6 +177,18 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+          <Link
+            to="/notifications"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center justify-between px-3 py-2 rounded text-sm text-on-surface hover:bg-surface-container"
+          >
+            <span>Notifications</span>
+            {unreadCount > 0 && (
+              <span className="px-1.5 py-0.5 rounded-full bg-damage text-white font-mono text-[10px]">
+                {unreadCount}
+              </span>
+            )}
+          </Link>
           <Link
             to="/profile"
             onClick={() => setMobileMenuOpen(false)}

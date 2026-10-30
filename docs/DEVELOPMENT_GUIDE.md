@@ -79,6 +79,14 @@ LeaseLedger implements a **3-tier modular architecture**:
   5. **Hybrid Offline Sync:** When inspecting properties with poor connectivity, `useDraft` stores ratings and notes in browser `localStorage`. When the browser detects an `online` event, the queue flushes back to the server seamlessly.
 
 
+### 2.6 Mid-Tenancy Maintenance & Incident Log (`server/src/services/issue.service.js`, `notification.service.js`)
+- **What it is:** Real-time incident reporting during an active tenancy for repairs, accidental damages, or appliance issues, paired with in-app notification routing and email dispatch.
+- **Why we built it this way:**
+  1. Tenancy disputes frequently involve incidents that occurred mid-lease (e.g. leaking faucet, storm damage) where parties lose track of who reported what, when, and whether it was resolved.
+  2. Recording issues with cryptographic SHA-256 photo plates and explicit timestamps builds an indisputable timeline.
+  3. All mid-tenancy issue reports and resolutions are automatically compiled into an evidentiary appendix in the final handover PDF report, ensuring complete historical transparency.
+  4. Real-time in-app notifications with unread tracking keep both Landlord and Tenant immediately informed of maintenance dispatches and inspection review requests.
+
 ### 3.1 Design System: "Editorial Architectural Ledger"
 - **Canvas Base:** Warm Ivory (`#F4FBF7` / `#F7F5EF`) replaces harsh clinical whites.
 - **Brand Ink:** Deep Forest Green (`#002720` / `#183D35`) provides authoritative, legal-grade framing.
