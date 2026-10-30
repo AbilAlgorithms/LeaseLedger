@@ -6,6 +6,9 @@ mongoose.set('strictQuery', true);
 let memoryServer = null;
 
 export async function connectDB() {
+  if (mongoose.connection.readyState === 1) {
+    return;
+  }
   try {
     // Attempt connecting to the configured URI with a 3-second timeout for fast fallback
     await mongoose.connect(env.MONGODB_URI, {

@@ -1,9 +1,22 @@
 import app from './app.js';
 import { env } from './config/env.js';
 import { connectDB, disconnectDB } from './config/db.js';
+import { User } from './models/index.js';
+import { seed } from './seed/seed.js';
 
 async function bootstrap() {
   await connectDB();
+
+  // Automatically seed default personas if database is empty (e.g. fresh in-memory MongoDB)
+  try {
+    const userCount = await User.countDocuments();
+    if (userCount === 0) {
+      console.log('[Server] Database is empty. Automatically seeding demo personas (Asha, Ravi, Admin)...');
+      await seed();
+    }
+  } catch (err) {
+    console.warn('[Server] Auto-seed check failed:', err.message);
+  }
 
   const server = app.listen(env.PORT, () => {
     console.log(`[Server] LeaseLedger API listening on http://localhost:${env.PORT}`);
