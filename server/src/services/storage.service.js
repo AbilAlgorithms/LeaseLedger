@@ -34,7 +34,7 @@ export async function uploadFile(buffer, originalFilename = 'photo.jpg', folder 
         const uploadStream = cloudinary.uploader.upload_stream(
           {
             folder: `leaseledger/${folder}`,
-            resource_type: 'image',
+            resource_type: 'auto',
           },
           (error, result) => {
             if (error) return reject(error);

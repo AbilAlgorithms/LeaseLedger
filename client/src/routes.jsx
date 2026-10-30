@@ -18,6 +18,9 @@ import InspectionWizardPage from './pages/shared/InspectionWizardPage';
 import InspectionReviewPage from './pages/shared/InspectionReviewPage';
 import IssuesPage from './pages/shared/IssuesPage';
 import NotificationsPage from './pages/shared/NotificationsPage';
+import ComparisonPage from './pages/shared/ComparisonPage';
+import ReportPage from './pages/shared/ReportPage';
+import SharedReportPage from './pages/public/SharedReportPage';
 
 export default function AppRoutes() {
   return (
@@ -30,6 +33,7 @@ export default function AppRoutes() {
       <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
       <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
       <Route path="/join/:token" element={<JoinTenancyPage />} />
+      <Route path="/shared/reports/:token" element={<SharedReportPage />} />
 
       {/* Authenticated Shared Pages */}
       <Route
@@ -69,6 +73,22 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute>
             <IssuesPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/tenancies/:id/comparison"
+        element={
+          <ProtectedRoute>
+            <ComparisonPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/tenancies/:id/report"
+        element={
+          <ProtectedRoute>
+            <ReportPage />
           </ProtectedRoute>
         }
       />

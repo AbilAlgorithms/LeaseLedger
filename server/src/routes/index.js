@@ -10,6 +10,7 @@ import inspectionRoutes from './inspection.routes.js';
 import amendmentRoutes from './amendment.routes.js';
 import issueRoutes from './issue.routes.js';
 import notificationRoutes from './notification.routes.js';
+import sharedRoutes from './shared.routes.js';
 
 const router = Router();
 
@@ -24,6 +25,7 @@ router.use('/inspections', inspectionRoutes);
 router.use('/amendments', amendmentRoutes);
 router.use('/issues', issueRoutes);
 router.use('/notifications', notificationRoutes);
+router.use('/shared', sharedRoutes);
 
 router.get('/', (req, res) => {
   res.json({
