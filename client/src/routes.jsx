@@ -7,18 +7,13 @@ import RegisterPage from './pages/public/RegisterPage';
 import ForgotPasswordPage from './pages/public/ForgotPasswordPage';
 import ResetPasswordPage from './pages/public/ResetPasswordPage';
 import VerifyEmailPage from './pages/public/VerifyEmailPage';
+import JoinTenancyPage from './pages/public/JoinTenancyPage';
 import ProfilePage from './pages/shared/ProfilePage';
+import DashboardPage from './pages/shared/DashboardPage';
 import PropertiesPage from './pages/landlord/PropertiesPage';
 import PropertyDetailPage from './pages/landlord/PropertyDetailPage';
-
-function DashboardDispatcher() {
-  return (
-    <div className="max-w-5xl mx-auto py-8 px-4 space-y-4">
-      <h1 className="text-2xl font-bold font-headline text-primary">Overview Dashboard</h1>
-      <p className="text-sm text-on-surface-variant">Connecting your property and handover workflows...</p>
-    </div>
-  );
-}
+import CreateTenancyPage from './pages/landlord/CreateTenancyPage';
+import TenancyDetailPage from './pages/shared/TenancyDetailPage';
 
 export default function AppRoutes() {
   return (
@@ -30,8 +25,17 @@ export default function AppRoutes() {
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
       <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
+      <Route path="/join/:token" element={<JoinTenancyPage />} />
 
       {/* Authenticated Shared Pages */}
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/profile"
         element={
@@ -41,15 +45,15 @@ export default function AppRoutes() {
         }
       />
       <Route
-        path="/dashboard"
+        path="/tenancies/:id"
         element={
           <ProtectedRoute>
-            <DashboardDispatcher />
+            <TenancyDetailPage />
           </ProtectedRoute>
         }
       />
 
-      {/* Landlord Property Management Pages */}
+      {/* Landlord Specific Pages */}
       <Route
         path="/properties"
         element={
@@ -63,6 +67,14 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute>
             <PropertyDetailPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/tenancies/new"
+        element={
+          <ProtectedRoute roles={['LANDLORD']}>
+            <CreateTenancyPage />
           </ProtectedRoute>
         }
       />

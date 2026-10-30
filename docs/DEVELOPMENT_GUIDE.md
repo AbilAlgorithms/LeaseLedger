@@ -61,6 +61,14 @@ LeaseLedger implements a **3-tier modular architecture**:
   3. Ownership enforcement checks (`assertPropertyOwner`) verify that only the landlord owning the property may modify rooms and inventory items.
 - **How it connects:** The inventory items defined here populate the Inspection Wizard at move-in. At move-out, the comparison engine retrieves these exact items to verify differential conditions and calculate missing asset deltas.
 
+### 2.4 Tenancy Lifecycle & Cryptographic Invitation Protocol (`server/src/services/tenancy.service.js`, `invitation.service.js`)
+- **What it is:** The contractual binding mechanism establishing tenancy relationships, issuing single-use invitation tokens, and orchestrating the multi-stage handover timeline.
+- **Why we built it this way:**
+  1. Tenancy invitations generate cryptographically random 32-byte tokens. Only their SHA-256 hashes are stored in the database (`Invitation.tokenHash`), while the raw token is delivered via email or copyable URL (`/join/:token`).
+  2. Single-use enforcement and a 7-day expiration window protect against unauthorized access and replay attacks.
+  3. Acceptance immediately updates the tenancy's `tenants` array, transitions the invitation to `ACCEPTED`, and notifies the landlord via in-app alerts and transactional email.
+  4. The Tenancy Timeline Hub (`/tenancies/:id`) provides a single transparent view of the handover lifecycle: Onboarding → Move-In Inspection → Mid-Tenancy Issues → Move-Out Inspection → Differential Comparison & PDF Dossier.
+
 
 ### 3.1 Design System: "Editorial Architectural Ledger"
 - **Canvas Base:** Warm Ivory (`#F4FBF7` / `#F7F5EF`) replaces harsh clinical whites.
