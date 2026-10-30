@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: leaseledger
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      MONGODB_URI: mongodb://mongodb:27017/leaseledger
+      JWT_ACCESS_SECRET: 8f9b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b
+      JWT_REFRESH_SECRET: 1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b
+      CLIENT_URL: http://localhost:80
+      STORAGE_DRIVER: local
+    depends_on:
+      - mongodb
+    ports:
+      - "5000:5000"
+    volumes:
+      - uploads_data:/app/storage/uploads
+
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+
+volumes:
+  mongo_data:
+  uploads_data:

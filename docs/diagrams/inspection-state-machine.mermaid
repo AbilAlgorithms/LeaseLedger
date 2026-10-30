@@ -1,0 +1,32 @@
+stateDiagram-v2
+  [*] --> DRAFT: Inspector Initiates Move-In / Move-Out
+
+  state DRAFT {
+    [*] --> InProgress: Checklist Entry
+    InProgress --> DebouncedSync: Rating & Note Change (600ms)
+    InProgress --> LocalStorageSync: Network Disconnection (useDraft)
+    LocalStorageSync --> DebouncedSync: Online Event Fired
+    InProgress --> PhotoUpload: Add Photographic Plate
+    PhotoUpload --> ComputeSHA256: Compute Cryptographic Hash
+  }
+
+  DRAFT --> IN_REVIEW: Submit for Sign-off (Landlord or Tenant)
+
+  state IN_REVIEW {
+    [*] --> AwaitingFirstSignature
+    AwaitingFirstSignature --> FirstSigned: One Party Digitally Signs
+    FirstSigned --> InDispute: Either Party Raises Dispute
+    AwaitingFirstSignature --> InDispute: Either Party Raises Dispute
+  }
+
+  InDispute --> DRAFT: Reset Status & Purge Confirmations
+
+  FirstSigned --> LOCKED: Second Party Signs (Atomic Precondition)
+
+  state LOCKED {
+    [*] --> ImmutableLedger
+    ImmutableLedger --> HTTP_409: Mutation Attempted (PATCH / PUT / DELETE)
+    ImmutableLedger --> AppendAmendment: POST /amendments (Post-Lock Correction)
+  }
+
+  LOCKED --> [*]: Handover Record Sealed

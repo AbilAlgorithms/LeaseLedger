@@ -1,0 +1,30 @@
+flowchart TD
+  START([Move-Out Inspection Locked]) --> FETCH[Fetch Move-In and Move-Out Records]
+  FETCH --> AMEND[Apply Approved Post-Lock Amendments]
+  AMEND --> LOOP{Iterate Move-In Items}
+
+  LOOP --> MATCH[Match Item in Move-Out by ID or Snapshot Key]
+  MATCH --> EXISTS{Item Found at Move-Out?}
+
+  EXISTS -- No --> MISSING[Classify as MISSING<br/>Count missing +1]
+  EXISTS -- Yes --> EVAL{Compare Rating delta: mo.rating - mi.rating}
+
+  EVAL -- delta == 0 --> UNCHANGED[Classify as UNCHANGED]
+  UNCHANGED --> WEAR{Was Move-In Rating <= 3 or had defects?}
+  WEAR -- Yes --> PRE_WEAR[Flag: PRE-EXISTING WEAR<br/>Tenant not liable]
+  WEAR -- No --> NO_WEAR[Standard Wear & Tear]
+
+  EVAL -- delta < 0 --> DETERIORATED[Classify as CHANGED_DETERIORATED<br/>Count deteriorated +1]
+  EVAL -- delta > 0 --> IMPROVED[Classify as IMPROVED<br/>Count improved +1]
+
+  MISSING --> METERS
+  PRE_WEAR --> METERS
+  NO_WEAR --> METERS
+  DETERIORATED --> METERS
+  IMPROVED --> METERS
+
+  METERS[Calculate Meter Consumption: mo.value - mi.value] --> SUMMARY[Generate Executive Summary String]
+  SUMMARY --> SAVE_COMP[Upsert Comparison Record in Database]
+  SAVE_COMP --> TEN_STATUS[Transition Tenancy to COMPLETED]
+  TEN_STATUS --> NOTIFY[Dispatch Notifications to Landlord & Tenants]
+  NOTIFY --> PDF[Trigger PDFKit Certified Dossier Compilation]

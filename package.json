@@ -20,6 +20,7 @@
     "lint": "npm --prefix server run lint && npm --prefix client run lint"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "concurrently": "^8.2.2"
   }
 }

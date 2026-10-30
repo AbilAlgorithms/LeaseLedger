@@ -1,0 +1,23 @@
+sequenceDiagram
+  autonumber
+  actor Landlord as Asha (Landlord)
+  participant API as LeaseLedger API
+  participant DB as MongoDB
+  actor Tenant as Ravi (Tenant)
+
+  Landlord->>API: POST /api/v1/tenancies/:id/invitations { email }
+  Note over API: Generate 32-byte crypto random token<br/>Compute SHA-256 hash<br/>Set expiresAt = +7 days
+  API->>DB: Save Invitation (status: PENDING, tokenHash)
+  API-->>Landlord: 201 Created { shareUrl: /join/:rawToken }
+
+  Landlord->>Tenant: Dispatches invite link via email/chat
+  Tenant->>API: GET /api/v1/invitations/:rawToken
+  Note over API: Compute SHA-256(rawToken)<br/>Query DB by tokenHash
+  DB-->>API: Invitation Document (status: PENDING, valid expiry)
+  API-->>Tenant: 200 OK (Tenancy details & property address)
+
+  Tenant->>API: POST /api/v1/invitations/:rawToken/accept
+  Note over API: Verify authenticated tenant user<br/>Atomically add tenant._id to tenancy.tenants<br/>Update Invitation (status: ACCEPTED, acceptedBy)
+  API->>DB: Persist Tenancy update & Invitation closure
+  API-->>Landlord: Notification (Tenant Joined Tenancy)
+  API-->>Tenant: 200 OK (Redirect to /tenancies/:id)

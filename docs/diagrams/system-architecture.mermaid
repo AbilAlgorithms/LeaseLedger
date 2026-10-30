@@ -1,0 +1,38 @@
+flowchart TD
+  subgraph Client ["Frontend (React 18 + Vite + Tailwind)"]
+    UI["Editorial UI Primitives (Button, Modal, Badge)"]
+    WIZ["Inspection Wizard + useDraft Offline Sync"]
+    COMP_UI["Differential Comparison Matrix"]
+    REP_UI["Certified Dossier PDF Viewer"]
+    ADM_UI["Admin Governance & Audit Console"]
+  end
+
+  subgraph API ["REST API Layer (Express + Node.js)"]
+    AUTH_MW["Auth & RBAC Middleware (JWT + Refresh Cookie)"]
+    RATE_MW["Rate Limiting & Security (Helmet, MongoSanitize)"]
+    ROUTERS["Modular Routers (/properties, /tenancies, /inspections, /admin)"]
+  end
+
+  subgraph Engine ["Business Logic & Engines"]
+    INSP_SRV["Inspection Service (Atomic Lock Precondition)"]
+    COMP_SRV["Automated Comparison Engine (SRS Diff Algorithm)"]
+    REP_SRV["Report Service (PDFKit Server-side A4 Renderer)"]
+    STOR_SRV["Storage Engine (SHA-256 Photo Hasher)"]
+    NOTIF_SRV["In-App Notification Dispatcher"]
+  end
+
+  subgraph DB ["Database & Storage"]
+    MONGO[("MongoDB Database (Mongoose 8)")]
+    UPLOADS[("Evidentiary Plates & PDF Dossiers (/storage/uploads)")]
+  end
+
+  Client --> API
+  AUTH_MW --> ROUTERS
+  RATE_MW --> ROUTERS
+  ROUTERS --> Engine
+  INSP_SRV --> MONGO
+  COMP_SRV --> MONGO
+  REP_SRV --> UPLOADS
+  STOR_SRV --> UPLOADS
+  STOR_SRV --> MONGO
+  NOTIF_SRV --> MONGO
