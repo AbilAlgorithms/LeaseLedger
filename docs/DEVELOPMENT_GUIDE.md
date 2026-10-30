@@ -53,7 +53,14 @@ LeaseLedger implements a **3-tier modular architecture**:
   5. Privacy-by-design compliance (GDPR) provides instant JSON data exports (`/users/me/export`) and irreversible PII anonymization (`/users/me`), ensuring tenancy audit records are legally preserved without retaining personal identifiers.
 - **How it connects:** The client's Axios layer intercepts 401 Unauthorized responses and seamlessly executes background token rotation against `/api/v1/auth/refresh`, allowing uninterrupted walk-throughs during long property inspections.
 
-## 3. Frontend Architecture: What, Why & How They Connect
+### 2.3 Property, Room & Inventory Management (`server/src/services/property.service.js`)
+- **What it is:** Hierarchical asset cataloging enabling Landlords to configure properties, subdivide them into physical spaces (Rooms), and catalog fixtures/assets with designated categories and quantities.
+- **Why we built it this way:**
+  1. Rental handovers require an unambiguous baseline. Defining rooms and assets beforehand standardizes the walk-through so that move-in and move-out inspections evaluate identical inventories.
+  2. Implements **Reference Protection**: If a room or item is referenced in any existing `ConditionRecord` of an inspection, it cannot be hard-deleted. Instead, deletion requests automatically transition the item to `archived: true`, preserving the historical evidentiary record while removing it from future tenancy templates.
+  3. Ownership enforcement checks (`assertPropertyOwner`) verify that only the landlord owning the property may modify rooms and inventory items.
+- **How it connects:** The inventory items defined here populate the Inspection Wizard at move-in. At move-out, the comparison engine retrieves these exact items to verify differential conditions and calculate missing asset deltas.
+
 
 ### 3.1 Design System: "Editorial Architectural Ledger"
 - **Canvas Base:** Warm Ivory (`#F4FBF7` / `#F7F5EF`) replaces harsh clinical whites.

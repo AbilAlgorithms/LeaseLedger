@@ -1,11 +1,17 @@
 import { Router } from 'express';
 import authRoutes from './auth.routes.js';
 import userRoutes from './user.routes.js';
+import propertyRoutes from './property.routes.js';
+import roomRoutes from './room.routes.js';
+import itemRoutes from './item.routes.js';
 
 const router = Router();
 
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
+router.use('/properties', propertyRoutes);
+router.use('/rooms', roomRoutes);
+router.use('/items', itemRoutes);
 
 router.get('/', (req, res) => {
   res.json({

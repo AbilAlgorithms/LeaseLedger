@@ -8,8 +8,9 @@ import ForgotPasswordPage from './pages/public/ForgotPasswordPage';
 import ResetPasswordPage from './pages/public/ResetPasswordPage';
 import VerifyEmailPage from './pages/public/VerifyEmailPage';
 import ProfilePage from './pages/shared/ProfilePage';
+import PropertiesPage from './pages/landlord/PropertiesPage';
+import PropertyDetailPage from './pages/landlord/PropertyDetailPage';
 
-// Placeholder dashboards that will be expanded in upcoming phases
 function DashboardDispatcher() {
   return (
     <div className="max-w-5xl mx-auto py-8 px-4 space-y-4">
@@ -30,7 +31,7 @@ export default function AppRoutes() {
       <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
       <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
 
-      {/* Authenticated Pages */}
+      {/* Authenticated Shared Pages */}
       <Route
         path="/profile"
         element={
@@ -44,6 +45,24 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute>
             <DashboardDispatcher />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Landlord Property Management Pages */}
+      <Route
+        path="/properties"
+        element={
+          <ProtectedRoute roles={['LANDLORD']}>
+            <PropertiesPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/properties/:id"
+        element={
+          <ProtectedRoute>
+            <PropertyDetailPage />
           </ProtectedRoute>
         }
       />
