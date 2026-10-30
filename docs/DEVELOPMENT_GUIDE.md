@@ -43,9 +43,24 @@ LeaseLedger implements a **3-tier modular architecture**:
 
 ---
 
+### 2.2 Authentication & User Governance (`server/src/services/auth.service.js`)
+- **What it is:** A secure, stateless authentication and session management system implementing JWT access tokens (15-minute TTL, stored in memory) and long-lived refresh tokens (7-day TTL, stored in `httpOnly` secure cookies with rotation).
+- **Why we built it this way:**
+  1. Storing tokens strictly in memory on the client while delegating refresh to `httpOnly` cookies prevents Cross-Site Scripting (XSS) token theft.
+  2. Stateless JWT verification avoids database lookups on every request, while role checks in the token payload enable microsecond-speed RBAC.
+  3. Single-use hashed tokens for email verification and password resets prevent replay and brute-force token enumeration attacks.
+  4. Built-in account suspension checks reject deactivated users immediately on subsequent logins and refresh rotations.
+  5. Privacy-by-design compliance (GDPR) provides instant JSON data exports (`/users/me/export`) and irreversible PII anonymization (`/users/me`), ensuring tenancy audit records are legally preserved without retaining personal identifiers.
+- **How it connects:** The client's Axios layer intercepts 401 Unauthorized responses and seamlessly executes background token rotation against `/api/v1/auth/refresh`, allowing uninterrupted walk-throughs during long property inspections.
+
 ## 3. Frontend Architecture: What, Why & How They Connect
 
-*(Updated progressively as client modules and wizards are built)*
+### 3.1 Design System: "Editorial Architectural Ledger"
+- **Canvas Base:** Warm Ivory (`#F4FBF7` / `#F7F5EF`) replaces harsh clinical whites.
+- **Brand Ink:** Deep Forest Green (`#002720` / `#183D35`) provides authoritative, legal-grade framing.
+- **Evidentiary Statuses:** Emerald Verified (`#2D7A58`), Ochre Pending (`#D9822B`), and Crimson Damage (`#C94A4A`).
+- **Typography:** Plus Jakarta Sans for architectural titles and Inter for continuous reading and tabular-mono numeric alignment.
+
 
 ---
 
