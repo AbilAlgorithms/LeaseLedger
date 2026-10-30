@@ -6,6 +6,8 @@ import roomRoutes from './room.routes.js';
 import itemRoutes from './item.routes.js';
 import tenancyRoutes from './tenancy.routes.js';
 import invitationRoutes from './invitation.routes.js';
+import inspectionRoutes from './inspection.routes.js';
+import amendmentRoutes from './amendment.routes.js';
 
 const router = Router();
 
@@ -16,6 +18,8 @@ router.use('/rooms', roomRoutes);
 router.use('/items', itemRoutes);
 router.use('/tenancies', tenancyRoutes);
 router.use('/invitations', invitationRoutes);
+router.use('/inspections', inspectionRoutes);
+router.use('/amendments', amendmentRoutes);
 
 router.get('/', (req, res) => {
   res.json({

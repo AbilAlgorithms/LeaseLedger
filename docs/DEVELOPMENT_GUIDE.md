@@ -69,6 +69,15 @@ LeaseLedger implements a **3-tier modular architecture**:
   3. Acceptance immediately updates the tenancy's `tenants` array, transitions the invitation to `ACCEPTED`, and notifies the landlord via in-app alerts and transactional email.
   4. The Tenancy Timeline Hub (`/tenancies/:id`) provides a single transparent view of the handover lifecycle: Onboarding → Move-In Inspection → Mid-Tenancy Issues → Move-Out Inspection → Differential Comparison & PDF Dossier.
 
+### 2.5 Inspection Engine, Dual-Confirmation Protocol & Immutability (`server/src/services/inspection.service.js`)
+- **What it is:** The central evidentiary collection engine managing room-by-room walk-throughs, 5-point condition evaluations, photographic plate uploads with SHA-256 tamper-evident digests, utility meter logs, dual-party digital confirmation, atomic locking, and dispute resets.
+- **Why we built it this way:**
+  1. Handover disputes usually arise because one party claims an item was damaged or stained before move-in. LeaseLedger pre-populates all active property items into the Move-In checklist, captures camera photos, computes cryptographic checksums, and requires **explicit mutual confirmation** from both Landlord and Tenant.
+  2. **Atomic Dual Confirmation & Locking:** An inspection progresses from `DRAFT → IN_REVIEW → LOCKED`. Either participant can submit it for review. The system records participant ID, timestamp, and IP address for each digital confirmation. When both parties confirm, `Inspection.findOneAndUpdate` atomically freezes the record into the terminal `LOCKED` status.
+  3. **Mongoose Immutability Guard:** Any update or delete attempt on a locked inspection is blocked at the driver level with HTTP 409 `INSPECTION_LOCKED`. Post-lock adjustments are strictly confined to append-only `Amendment` logs.
+  4. **Dispute Mechanics:** If either party disputes any entry during review, the inspection reverts to `DRAFT` and all confirmations are automatically invalidated. Both parties must re-negotiate and re-confirm.
+  5. **Hybrid Offline Sync:** When inspecting properties with poor connectivity, `useDraft` stores ratings and notes in browser `localStorage`. When the browser detects an `online` event, the queue flushes back to the server seamlessly.
+
 
 ### 3.1 Design System: "Editorial Architectural Ledger"
 - **Canvas Base:** Warm Ivory (`#F4FBF7` / `#F7F5EF`) replaces harsh clinical whites.
