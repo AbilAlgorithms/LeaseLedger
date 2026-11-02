@@ -88,9 +88,16 @@ export async function downloadReport(req, res, next) {
       throw ApiError.notFound('PDF file not found on server disk');
     }
 
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `inline; filename="leaseledger-report-${req.params.id}.pdf"`);
-    res.sendFile(filePath);
+    const downloadFilename = `leaseledger-report-${req.params.id}.pdf`;
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
+
+    if (req.query.inline === 'true') {
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `inline; filename="${downloadFilename}"`);
+      return res.sendFile(filePath);
+    }
+
+    return res.download(filePath, downloadFilename);
   } catch (err) {
     next(err);
   }
@@ -162,9 +169,16 @@ export async function downloadPublicReport(req, res, next) {
       throw ApiError.notFound('Report PDF not found on disk');
     }
 
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `inline; filename="leaseledger-shared-report.pdf"`);
-    res.sendFile(filePath);
+    const downloadFilename = 'leaseledger-shared-report.pdf';
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
+
+    if (req.query.inline === 'true') {
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `inline; filename="${downloadFilename}"`);
+      return res.sendFile(filePath);
+    }
+
+    return res.download(filePath, downloadFilename);
   } catch (err) {
     next(err);
   }

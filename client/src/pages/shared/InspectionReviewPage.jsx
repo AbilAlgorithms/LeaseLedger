@@ -21,6 +21,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { getMediaUrl } from '../../utils/media';
 
 export default function InspectionReviewPage() {
   const { id: tenancyId, type } = useParams();
@@ -319,7 +320,7 @@ export default function InspectionReviewPage() {
                       className="relative rounded border border-outline-variant/30 overflow-hidden w-20 h-16 bg-surface-container"
                     >
                       <img
-                        src={p.fileUrl}
+                        src={getMediaUrl(p.fileUrl)}
                         alt="Evidence plate"
                         className="w-full h-full object-cover"
                       />

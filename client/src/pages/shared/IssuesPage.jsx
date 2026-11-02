@@ -22,6 +22,7 @@ import {
   Check,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { getMediaUrl } from '../../utils/media';
 
 export default function IssuesPage() {
   const { id: tenancyId } = useParams();
@@ -212,10 +213,10 @@ export default function IssuesPage() {
                       <div
                         key={idx}
                         className="group relative rounded border border-outline-variant/40 overflow-hidden w-28 h-20 bg-surface-container cursor-pointer"
-                        onClick={() => setSelectedLightboxPhoto(photo.fileUrl)}
+                        onClick={() => setSelectedLightboxPhoto(getMediaUrl(photo.fileUrl))}
                       >
                         <img
-                          src={photo.fileUrl}
+                          src={getMediaUrl(photo.fileUrl)}
                           alt="Incident evidence"
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                         />

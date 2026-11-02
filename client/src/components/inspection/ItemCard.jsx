@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
 import PhotoUploader from './PhotoUploader';
+import { getMediaUrl } from '../../utils/media';
 import { AlertCircle, ChevronDown, ChevronUp, History, Check } from 'lucide-react';
 
 const RATING_BUTTONS = [
@@ -176,7 +177,7 @@ export default function ItemCard({
                     {moveInReference.photos.map((p) => (
                       <img
                         key={p.id || p._id}
-                        src={p.fileUrl}
+                        src={getMediaUrl(p.fileUrl)}
                         alt="Move-In Baseline"
                         className="w-14 h-11 object-cover rounded border border-outline-variant/40"
                       />

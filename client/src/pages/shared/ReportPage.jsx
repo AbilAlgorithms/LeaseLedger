@@ -8,6 +8,7 @@ import {
   revokeReportShare,
 } from '../../api/report.api.js';
 import { getTenancyById } from '../../api/tenancy.api.js';
+import { getMediaUrl } from '../../utils/media.js';
 import Button from '../../components/ui/Button.jsx';
 import Badge from '../../components/ui/Badge.jsx';
 import Spinner from '../../components/ui/Spinner.jsx';
@@ -70,17 +71,32 @@ export default function ReportPage() {
 
   const handleDownload = async () => {
     setDownloading(true);
+    setError(null);
     try {
       const blob = await downloadReportBlob(tenancyId);
-      const url = window.URL.createObjectURL(new Blob([blob], { type: 'application/pdf' }));
+      const blobData = blob instanceof Blob ? blob : new Blob([blob], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blobData);
       const link = document.createElement('a');
       link.href = url;
       link.setAttribute('download', `leaseledger-report-${tenancyId}.pdf`);
       document.body.appendChild(link);
       link.click();
-      link.remove();
+      setTimeout(() => {
+        if (link.parentNode) link.parentNode.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }, 500);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to download PDF report');
+      let msg = 'Failed to download PDF report';
+      if (err.response?.data instanceof Blob) {
+        try {
+          const text = await err.response.data.text();
+          const json = JSON.parse(text);
+          if (json.message) msg = json.message;
+        } catch (_) {}
+      } else if (err.response?.data?.message) {
+        msg = err.response.data.message;
+      }
+      setError(msg);
     } finally {
       setDownloading(false);
     }
@@ -156,13 +172,26 @@ export default function ReportPage() {
           </Link>
 
           {report && (
-            <Button
-              variant="primary"
-              onClick={handleDownload}
-              disabled={downloading}
-            >
-              {downloading ? <Spinner size="sm" /> : 'Download A4 PDF'}
-            </Button>
+            <>
+              {report.fileUrl && (
+                <a
+                  href={getMediaUrl(report.fileUrl)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button variant="outline">
+                    Preview in New Tab ↗
+                  </Button>
+                </a>
+              )}
+              <Button
+                variant="primary"
+                onClick={handleDownload}
+                disabled={downloading}
+              >
+                {downloading ? <Spinner size="sm" /> : 'Download A4 PDF'}
+              </Button>
+            </>
           )}
         </div>
       </div>
@@ -205,6 +234,20 @@ export default function ReportPage() {
               </div>
 
               <div className="flex items-center gap-3">
+                {report.fileUrl && (
+                  <a
+                    href={getMediaUrl(report.fileUrl)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button
+                      variant="outline"
+                      className="bg-transparent border-stone-400 text-white hover:bg-white/10"
+                    >
+                      Preview PDF ↗
+                    </Button>
+                  </a>
+                )}
                 <Button
                   variant="outline"
                   className="bg-transparent border-stone-400 text-white hover:bg-white/10"

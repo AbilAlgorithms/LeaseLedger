@@ -3,6 +3,7 @@ import Button from '../ui/Button';
 import Modal from '../ui/Modal';
 import { Camera, Trash2, Maximize2, ShieldCheck, UploadCloud, Image as ImageIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { getMediaUrl } from '../../utils/media';
 
 export default function PhotoUploader({
   photos = [],
@@ -83,7 +84,7 @@ export default function PhotoUploader({
               className="group relative rounded border border-outline-variant/40 bg-surface-container overflow-hidden aspect-[4/3] flex flex-col justify-end shadow-sm"
             >
               <img
-                src={photo.fileUrl}
+                src={getMediaUrl(photo.fileUrl)}
                 alt="Condition Evidence"
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-200 group-hover:scale-105 cursor-pointer"
                 onClick={() => setSelectedPhoto(photo)}
@@ -139,7 +140,7 @@ export default function PhotoUploader({
           <div className="space-y-4">
             <div className="rounded overflow-hidden border border-outline-variant/40 bg-black flex items-center justify-center max-h-[65vh]">
               <img
-                src={selectedPhoto.fileUrl}
+                src={getMediaUrl(selectedPhoto.fileUrl)}
                 alt="Full Evidence"
                 className="max-h-[65vh] w-auto object-contain"
               />

@@ -91,6 +91,7 @@ export default function TenancyDetailPage() {
     );
   }
 
+  const tenancyId = tenancy.id || tenancy._id;
   const moveInInspection = tenancy.inspections?.find((i) => i.type === 'MOVE_IN');
   const moveOutInspection = tenancy.inspections?.find((i) => i.type === 'MOVE_OUT');
 
@@ -165,12 +166,12 @@ export default function TenancyDetailPage() {
           {/* Quick Action Button for Comparison/Report if completed */}
           {tenancy.comparison && (
             <div className="flex flex-wrap items-center gap-2">
-              <Link to={`/tenancies/${tenancy.id}/comparison`}>
+              <Link to={`/tenancies/${tenancyId}/comparison`}>
                 <Button variant="primary" size="sm" icon={GitCompare}>
                   View Comparison
                 </Button>
               </Link>
-              <Link to={`/tenancies/${tenancy.id}/report`}>
+              <Link to={`/tenancies/${tenancyId}/report`}>
                 <Button variant="brass" size="sm" icon={Download}>
                   PDF Dossier
                 </Button>
@@ -347,8 +348,8 @@ export default function TenancyDetailPage() {
                 <Link
                   to={
                     moveInLocked
-                      ? `/tenancies/${tenancy.id}/inspections/move-in/review`
-                      : `/tenancies/${tenancy.id}/inspections/move-in`
+                      ? `/tenancies/${tenancyId}/inspections/move-in/review`
+                      : `/tenancies/${tenancyId}/inspections/move-in`
                   }
                 >
                   <Button
@@ -391,7 +392,7 @@ export default function TenancyDetailPage() {
             </div>
 
             <div>
-              <Link to={`/tenancies/${tenancy.id}/issues`}>
+              <Link to={`/tenancies/${tenancyId}/issues`}>
                 <Button variant="secondary" size="sm" icon={ArrowRight}>
                   View Incident Log
                 </Button>
@@ -460,8 +461,8 @@ export default function TenancyDetailPage() {
                 <Link
                   to={
                     moveOutLocked
-                      ? `/tenancies/${tenancy.id}/inspections/move-out/review`
-                      : `/tenancies/${tenancy.id}/inspections/move-out`
+                      ? `/tenancies/${tenancyId}/inspections/move-out/review`
+                      : `/tenancies/${tenancyId}/inspections/move-out`
                   }
                 >
                   <Button
@@ -512,7 +513,7 @@ export default function TenancyDetailPage() {
               </div>
 
               <div className="flex items-center gap-2">
-                <Link to={`/tenancies/${tenancy.id}/comparison`}>
+                <Link to={`/tenancies/${tenancyId}/comparison`}>
                   <Button
                     variant="primary"
                     size="sm"
@@ -522,7 +523,7 @@ export default function TenancyDetailPage() {
                     View Diff
                   </Button>
                 </Link>
-                <Link to={`/tenancies/${tenancy.id}/report`}>
+                <Link to={`/tenancies/${tenancyId}/report`}>
                   <Button
                     variant="brass"
                     size="sm"
