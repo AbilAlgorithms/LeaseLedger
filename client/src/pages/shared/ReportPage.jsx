@@ -229,7 +229,7 @@ export default function ReportPage() {
                   Official Condition & Handover Dossier v{report.version}
                 </h2>
                 <p className="text-stone-300 text-xs mt-1">
-                  Generated: {new Date(report.generatedAt || report.updatedAt).toLocaleString()} · Dossier ID: #{report._id.slice(-8).toUpperCase()}
+                  Generated: {new Date(report.generatedAt || report.updatedAt).toLocaleString()} · Dossier ID: #{(report.id || report._id || '').slice(-8).toUpperCase()}
                 </p>
               </div>
 

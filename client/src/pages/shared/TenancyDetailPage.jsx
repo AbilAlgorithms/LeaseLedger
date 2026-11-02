@@ -148,7 +148,7 @@ export default function TenancyDetailPage() {
                 {tenancy.property?.type || 'APARTMENT'}
               </span>
               <span className="text-xs font-mono text-outline">
-                Ref: #LL-{tenancy.id?.slice(-6).toUpperCase()}
+                Ref: #LL-{(tenancy.id || tenancy._id || '').slice(-6).toUpperCase()}
               </span>
             </div>
             <h1 className="font-headline font-bold text-2xl sm:text-3xl text-primary">
