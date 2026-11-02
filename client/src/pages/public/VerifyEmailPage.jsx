@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { authApi } from '../../api/auth.api';
 import Button from '../../components/ui/Button';
@@ -9,8 +9,12 @@ export default function VerifyEmailPage() {
   const { token } = useParams();
   const [status, setStatus] = useState('loading'); // loading, success, error
   const [message, setMessage] = useState('');
+  const hasRequestedRef = useRef(false);
 
   useEffect(() => {
+    if (hasRequestedRef.current) return;
+    hasRequestedRef.current = true;
+
     async function verify() {
       try {
         const res = await authApi.verifyEmail(token);
@@ -18,7 +22,11 @@ export default function VerifyEmailPage() {
         setMessage(res.data.message || 'Email verified successfully!');
       } catch (err) {
         setStatus('error');
-        setMessage(err.response?.data?.error?.message || 'Verification token is invalid or expired.');
+        setMessage(
+          err.response?.data?.error?.message ||
+          err.response?.data?.message ||
+          'Verification token is invalid or expired.'
+        );
       }
     }
     verify();

@@ -55,8 +55,12 @@ export async function verifyEmail(token) {
     throw ApiError.badRequest('Invalid or expired email verification token', 'INVALID_TOKEN');
   }
 
+  // Idempotent: If user is already verified with this token, succeed gracefully
+  if (user.emailVerified) {
+    return { message: 'Email address verified successfully. You may now log in.' };
+  }
+
   user.emailVerified = true;
-  user.verifyTokenHash = undefined;
   await user.save();
 
   await logAudit({
@@ -84,6 +88,9 @@ export async function login({ email, password }, req = null) {
   }
 
   user.lastLoginAt = new Date();
+  if (user.verifyTokenHash) {
+    user.verifyTokenHash = undefined;
+  }
   await user.save();
 
   const payload = {
