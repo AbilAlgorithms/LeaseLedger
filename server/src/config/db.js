@@ -10,9 +10,9 @@ export async function connectDB() {
     return;
   }
   try {
-    // Attempt connecting to the configured URI with a 3-second timeout for fast fallback
+    // Attempt connecting to the configured URI with a 10-second timeout
     await mongoose.connect(env.MONGODB_URI, {
-      serverSelectionTimeoutMS: 3000,
+      serverSelectionTimeoutMS: 10000,
       maxPoolSize: 20,
     });
     console.log(`[Database] MongoDB connected: ${mongoose.connection.host}/${mongoose.connection.name}`);
