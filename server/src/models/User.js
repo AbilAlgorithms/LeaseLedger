@@ -67,6 +67,10 @@ const userSchema = new Schema(
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('passwordHash')) return next();
+  // Prevent double-hashing if the value is already a valid bcrypt hash
+  if (typeof this.passwordHash === 'string' && /^\$2[abxy]\$\d{2}\$/.test(this.passwordHash)) {
+    return next();
+  }
   this.passwordHash = await bcrypt.hash(this.passwordHash, 12);
   next();
 });

@@ -105,14 +105,10 @@ export async function seed() {
   ]);
 
   console.log('[Seed] Creating core users (Admin, Landlord Asha, Tenant Ravi)...');
-  const passwordAdmin = await bcrypt.hash('Admin@123', 12);
-  const passwordAsha = await bcrypt.hash('Asha@1234', 12);
-  const passwordRavi = await bcrypt.hash('Ravi@1234', 12);
-
   const admin = await User.create({
     name: 'System Administrator',
     email: 'admin@leaseledger.test',
-    passwordHash: passwordAdmin,
+    passwordHash: 'Admin@123',
     role: 'ADMIN',
     emailVerified: true,
   });
@@ -120,7 +116,7 @@ export async function seed() {
   const asha = await User.create({
     name: 'Asha Patel',
     email: 'asha@leaseledger.test',
-    passwordHash: passwordAsha,
+    passwordHash: 'Asha@1234',
     role: 'LANDLORD',
     phone: '+44 7700 900077',
     emailVerified: true,
@@ -129,7 +125,7 @@ export async function seed() {
   const ravi = await User.create({
     name: 'Ravi Kumar',
     email: 'ravi@leaseledger.test',
-    passwordHash: passwordRavi,
+    passwordHash: 'Ravi@1234',
     role: 'TENANT',
     phone: '+44 7700 900088',
     emailVerified: true,
