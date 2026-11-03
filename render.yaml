@@ -4,14 +4,13 @@ services:
     env: node
     plan: free
     region: oregon
+    autoDeploy: true
     buildCommand: npm install && npm --prefix server install && npm --prefix client install && npm --prefix client run build
     startCommand: npm --prefix server start
-    healthCheckPath: /api/v1/health
+    healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 5000
       - key: MONGODB_URI
         sync: false
       - key: JWT_ACCESS_SECRET

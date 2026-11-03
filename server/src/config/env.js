@@ -14,7 +14,7 @@ dotenv.config();
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().default(5000),
-  CLIENT_URL: z.string().default('http://localhost:5173'),
+  CLIENT_URL: z.string().default(process.env.RENDER_EXTERNAL_URL || 'http://localhost:5173'),
   MONGODB_URI: z.string().default('mongodb://127.0.0.1:27017/leaseledger'),
   JWT_ACCESS_SECRET: z.string().min(16).default('leaseledger_dev_access_secret_super_secure_key_12345'),
   JWT_REFRESH_SECRET: z.string().min(16).default('leaseledger_dev_refresh_secret_super_secure_key_67890'),
