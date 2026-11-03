@@ -1,5 +1,6 @@
 # LeaseLedger — Digital Rental Condition & Handover Management System
 
+[![Live Deployment](https://img.shields.io/badge/Live%20Demo-leaseledger--508h.onrender.com-002720?style=for-the-badge&logo=render&logoColor=white)](https://leaseledger-508h.onrender.com)
 [![Build & Test](https://img.shields.io/badge/Tests-42%20Passed%20(100%25)-emerald.svg)](#test-suite--quality-assurance)
 [![Coverage](https://img.shields.io/badge/Coverage-74.4%25%20Lines-emerald.svg)](#test-suite--quality-assurance)
 [![Architecture](https://img.shields.io/badge/Design-Editorial%20Architectural%20Ledger-brass.svg)](#design-philosophy--aesthetic)
@@ -7,6 +8,21 @@
 [![License](https://img.shields.io/badge/License-MIT-stone.svg)](LICENSE)
 
 > An archival-grade, tamper-evident digital condition reporting platform engineered to resolve tenancy deposit disputes through cryptographic proof, document immutability, automated differential analysis, and dual-party digital sign-off.
+
+---
+
+## 🌐 Live Production Deployment
+
+LeaseLedger is officially deployed and accessible live in production on Render:
+
+| Resource | Direct Link |
+| :--- | :--- |
+| **Live Web Application** | **[https://leaseledger-508h.onrender.com](https://leaseledger-508h.onrender.com)** |
+| **API Health Probe** | [`https://leaseledger-508h.onrender.com/health`](https://leaseledger-508h.onrender.com/health) |
+| **API Health v1 Status** | [`https://leaseledger-508h.onrender.com/api/v1/health`](https://leaseledger-508h.onrender.com/api/v1/health) |
+| **Cloud Hosting Platform** | Render Cloud Application Services |
+| **Database Cluster** | MongoDB Atlas Cloud Replica Set |
+| **Instant Demo Access** | Use the 1-click **"Quick Demo One-Click Fill"** buttons on the sign-in page to test as **Landlord (Asha)**, **Tenant (Ravi)**, or **Admin** |
 
 ---
 

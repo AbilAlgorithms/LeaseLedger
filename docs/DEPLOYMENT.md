@@ -1,5 +1,15 @@
 # LeaseLedger — Production Deployment Guide
 
+## 🌐 0. Live Production Deployment
+
+LeaseLedger is actively running in production on the Render cloud platform:
+- **Live Production URL:** [https://leaseledger-508h.onrender.com](https://leaseledger-508h.onrender.com)
+- **Deployment Platform:** Render (Node.js Web Service + Static SPA Distribution)
+- **Database Backend:** MongoDB Atlas Managed Cloud Cluster
+- **Health Check Endpoint:** `https://leaseledger-508h.onrender.com/health`
+
+---
+
 ## 1. System Overview & Architecture
 
 LeaseLedger is deployed as a decoupled multi-tier web application consisting of:
