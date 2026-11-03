@@ -5,14 +5,14 @@ services:
     plan: free
     region: oregon
     autoDeploy: true
-    buildCommand: npm install && npm --prefix server install && npm --prefix client install && npm --prefix client run build
+    buildCommand: npm --prefix server install && npm --prefix client install && npm --prefix client run build
     startCommand: npm --prefix server start
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
       - key: MONGODB_URI
-        sync: false
+        value: mongodb+srv://leaseuser:leaseledger@leaseledger-cluster0.bd8ktuv.mongodb.net/leaseledger?retryWrites=true&w=majority
       - key: JWT_ACCESS_SECRET
         generateValue: true
       - key: JWT_REFRESH_SECRET
